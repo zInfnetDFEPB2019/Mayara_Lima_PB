@@ -1,28 +1,23 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <Home msg="Welcome to Your Vue.js App" />
+  <div id="app" class="container">
+    <PageContainer />
   </div>
 </template>
 
 <script>
-import Home from "./components/Home.vue";
-
+import PageContainer from "./components/PageContainer.vue";
 export default {
   name: "App",
   components: {
-    Home
+    PageContainer
   }
 };
 </script>
 
 <style>
+@import url("https://fonts.googleapis.com/css?family=Material+Icons");
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  min-height: 100vh;
 }
 </style>
