@@ -5,17 +5,22 @@
 </template>
 
 <script>
-import PageContainer from "./components/PageContainer.vue";
+import PageContainer from './components/PageContainer.vue';
 export default {
-  name: "App",
+  name: 'App',
   components: {
-    PageContainer
-  }
+    PageContainer,
+  },
 };
 </script>
 
 <style>
-@import url("https://fonts.googleapis.com/css?family=Material+Icons");
+@import url('https://fonts.googleapis.com/css?family=Material+Icons');
+@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
+
+* {
+  font-family: 'Montserrat', sans-serif;
+}
 
 #app {
   min-height: 100vh;

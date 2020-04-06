@@ -3,17 +3,25 @@ import { v4 as uuid } from 'uuid';
 import { getRandomQuote } from 'inspirational-quotes';
 
 const state = {
-  tasks: []
+  tasks: [],
+  madeFirstFetch: false,
 };
 const getters = {
   allTasks: state => state.tasks,
-  taskById: (state) => (id) => (state.tasks.filter(t => t.id === id))[0],
+  taskById: state => id => state.tasks.filter(t => t.id === id)[0],
+  alreadyMadeFirstFetch: state => state.madeFirstFetch,
 };
 const actions = {
   getTasks({ commit }) {
-    axios.get("https://jsonplaceholder.typicode.com/todos"
-    ).then((response) => {
-      commit('setTasks', response.data.filter(t => t.userId === 1).map(t => ({ ...t, description: getRandomQuote() })));
+    axios.get('https://jsonplaceholder.typicode.com/todos').then(response => {
+      commit(
+        'setTasks',
+        response.data
+          .filter(t => t.userId === 1)
+          .map(t => ({ ...t, description: getRandomQuote() }))
+      );
+      commit('sortTasks');
+      commit('setMadeFirstFetch');
     });
   },
   addTask({ commit }, newTaskTitle) {
@@ -22,7 +30,7 @@ const actions = {
       id: uuid(),
       title: newTaskTitle,
       completed: false,
-      description: getRandomQuote()
+      description: getRandomQuote(),
     };
     commit('pushTask', response);
   },
@@ -30,8 +38,12 @@ const actions = {
     commit('removeTask', id);
   },
   updateTask({ commit }, updatedTask) {
-    commit("updateTask", updatedTask);
-  }
+    commit('updateTask', updatedTask);
+    commit('sortTasks');
+  },
+  sortAllTasks({ commit }) {
+    commit('sortTasks');
+  },
 };
 
 const mutations = {
@@ -43,14 +55,21 @@ const mutations = {
     const index = state.tasks.findIndex(task => task.id === updatedTask.id);
 
     if (index !== -1) {
-      state.tasks.splice(index, 1, updatedTask);
+      return state.tasks.splice(index, 1, updatedTask);
     }
-  }
+  },
+  sortTasks: state =>
+    (state.tasks = state.tasks.sort((t1, t2) => {
+      if (t1.completed === t2.completed) return 0;
+      if (t1.completed && !t2.completed) return 1;
+      return -1;
+    })),
+  setMadeFirstFetch: state => (state.madeFirstFetch = true),
 };
 
 export default {
   state,
   actions,
   getters,
-  mutations
+  mutations,
 };

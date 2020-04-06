@@ -9,37 +9,31 @@
       </md-app-toolbar>
 
       <md-app-drawer :md-active.sync="menuVisible">
-        <md-toolbar class="md-transparent" md-elevation="0">Menu</md-toolbar>
+        <md-toolbar class="md-transparent" md-elevation="0">
+          <img src="../assets/logo.png" class="logo" />Menu
+        </md-toolbar>
 
         <md-list>
           <router-link tag="a" :to="{ name: 'home' }">
-            <md-list-item>
+            <md-list-item @click="menuVisible = false">
               <md-icon>home</md-icon>
               <span class="md-list-item-text">Home</span>
             </md-list-item>
           </router-link>
 
           <router-link tag="a" :to="{ name: 'tasks' }">
-            <md-list-item>
+            <md-list-item @click="menuVisible = false">
               <md-icon>check_box</md-icon>
               <span class="md-list-item-text">Tarefas</span>
             </md-list-item>
           </router-link>
 
-          <md-list-item>
-            <md-icon>favorite</md-icon>
-            <span class="md-list-item-text">Sobre nós</span>
-          </md-list-item>
-
-          <md-list-item>
-            <md-icon>person</md-icon>
-            <span class="md-list-item-text">Login</span>
-          </md-list-item>
-
-          <md-list-item>
-            <md-icon>people</md-icon>
-            <span class="md-list-item-text">Cadastre-se</span>
-          </md-list-item>
+          <router-link tag="a" :to="{ name: 'about' }">
+            <md-list-item @click="menuVisible = false">
+              <md-icon>favorite</md-icon>
+              <span class="md-list-item-text">Sobre</span>
+            </md-list-item>
+          </router-link>
         </md-list>
       </md-app-drawer>
 
@@ -51,11 +45,25 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
+
 export default {
-  name: "PageContainer",
+  name: 'PageContainer',
   data: () => ({
-    menuVisible: false
-  })
+    menuVisible: false,
+  }),
+  methods: {
+    ...mapActions(['getTasks']),
+  },
+  computed: mapGetters(['alreadyMadeFirstFetch']),
+  created() {
+    if (!this.alreadyMadeFirstFetch) {
+      this.getTasks();
+    }
+  },
+  mounted() {
+    this.$material.theming.theme = 'purple';
+  },
 };
 </script>
 
@@ -70,5 +78,10 @@ export default {
 .md-drawer {
   width: 230px;
   max-width: calc(100vw - 125px);
+}
+
+.logo {
+  width: 32px;
+  margin-right: 24px;
 }
 </style>
